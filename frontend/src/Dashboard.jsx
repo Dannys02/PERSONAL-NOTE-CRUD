@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import AllNote from "./pages/AllNote";
 import CreateNote from "./pages/CreateNote";
 import Setting from "./pages/Setting";
@@ -7,11 +8,13 @@ export default function Dashboard() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const Thn = new Date().getFullYear();
     const [pages, setPages] = useState("dashboard");
-
     const [dark, setDark] = useState(() => {
         return localStorage.getItem("theme") === "dark";
     });
 
+    const [data, setData] = useState([]);
+
+    // DARK MODE
     useEffect(() => {
         if (dark) {
             document.documentElement.classList.add("dark");
@@ -21,6 +24,18 @@ export default function Dashboard() {
             localStorage.setItem("theme", "light");
         }
     }, [dark]);
+
+    const fetchNotes = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/api/notes");
+            console.log(response.data);
+        } catch (error) {
+            console.error(
+                "Gagal mengambil data:",
+                error.response?.data || error.message
+            );
+        }
+    };
 
     return (
         <div className="min-h-screen dark:bg-slate-950 bg-white flex text-slate-800 dark:text-slate-200 font-sans transition-colors duration-300">
@@ -119,7 +134,9 @@ export default function Dashboard() {
                 >
                     {pages === "dashboard" && <AllNote />}
                     {pages === "create-note" && <CreateNote />}
-                    {pages === "setting" && <Setting dark={dark} setDark={setDark} />}
+                    {pages === "setting" && (
+                        <Setting dark={dark} setDark={setDark} />
+                    )}
                 </main>
 
                 <footer className="py-6 px-10 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 transition-colors duration-300">
