@@ -5,7 +5,7 @@ export default function Setting({ dark, setDark }) {
     return (
         <div className="max-w-4xl mx-auto transition-colors duration-300">
             <div className="mb-10 text-center lg:text-left">
-                <h1 className="text-indigo-600 dark:text-white text-3xl font-bold tracking-tight mb-2 transition-colors duration-300">
+                <h1 className="text-indigo-400 text-3xl font-bold tracking-tight mb-2 transition-colors duration-300">
                     Pengaturan
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 font-medium transition-colors duration-300">
@@ -35,7 +35,7 @@ export default function Setting({ dark, setDark }) {
                                     <i className="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-600 text-xs transition-colors duration-300"></i>
                                     <input
                                         type="text"
-                                        defaultValue="Zaky Dashboard"
+                                        defaultValue="Dannys Martha F"
                                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-5 py-3.5 text-sm text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-600 outline-none transition-all duration-300"
                                     />
                                 </div>
@@ -48,7 +48,7 @@ export default function Setting({ dark, setDark }) {
                                     <i className="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-600 text-xs transition-colors duration-300"></i>
                                     <input
                                         type="email"
-                                        defaultValue="zaky@example.com"
+                                        defaultValue="danisA01@gmail.com"
                                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-5 py-3.5 text-sm text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-600 outline-none transition-all duration-300"
                                     />
                                 </div>
