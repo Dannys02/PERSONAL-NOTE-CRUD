@@ -4,26 +4,11 @@ import AllNote from "./pages/AllNote";
 import CreateNote from "./pages/CreateNote";
 import Setting from "./pages/Setting";
 
-export default function Dashboard() {
+export default function Dashboard({ dark, setDark }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const Thn = new Date().getFullYear();
     const [pages, setPages] = useState("dashboard");
-    const [dark, setDark] = useState(() => {
-        return localStorage.getItem("theme") === "dark";
-    });
-
     const [data, setData] = useState([]);
-
-    // DARK MODE
-    useEffect(() => {
-        if (dark) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
-        }
-    }, [dark]);
 
     const fetchNotes = async () => {
         try {
@@ -53,7 +38,7 @@ export default function Dashboard() {
                             <i className="fas fa-pen-nib text-white text-lg"></i>
                         </div>
                         <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white transition-colors duration-300">
-                            Dannys Note
+                            User Note
                         </span>
                     </div>
 
@@ -93,9 +78,19 @@ export default function Dashboard() {
                         </button>
                     </nav>
 
-                    <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 transition-colors duration-300">
-                        <div className="w-10 h-10 leading-9 text-center rounded-full bg-indigo-100 dark:bg-slate-800 border-2 border-indigo-200 dark:border-slate-700 overflow-hidden shadow-sm transition-colors duration-300">
-                            DS
+                    <div
+                        className="mt-auto pt-6 border-t border-slate-100
+                    dark:border-slate-800 flex items-center gap-3
+                    transition-colors duration-300"
+                    >
+                        <div
+                            className="w-10 h-10 leading-9 text-center
+                        rounded-full bg-indigo-100 text-indigo-600
+                        dark:text-white font-bold dark:bg-slate-800 border-2
+                        border-indigo-200 dark:border-slate-700 overflow-hidden
+                        shadow-sm transition-colors duration-300"
+                        >
+                            PG
                         </div>
                         <div>
                             <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight transition-colors duration-300">
@@ -106,6 +101,13 @@ export default function Dashboard() {
                             </p>
                         </div>
                     </div>
+                    <form action="">
+                        <button className="bg-red-500 h-10 w-full rounded-[10px]
+                        text-white mt-5 hover:bg-red-700 transition-colors
+                        duration-300" type="text">
+                          Logout
+                        </button>
+                    </form>
                 </div>
             </aside>
 
@@ -133,26 +135,27 @@ export default function Dashboard() {
                     className="flex-1 p-6 md:p-10 dark:bg-slate-950 transition-colors duration-300"
                 >
                     {pages === "dashboard" && <AllNote />}
-                    {pages === "create-note" && <CreateNote />}
+                    {pages === "create-note" && <CreateNote pages={pages}
+                    setPages={setPages} />}
                     {pages === "setting" && (
                         <Setting dark={dark} setDark={setDark} />
                     )}
                 </main>
 
                 <footer className="py-6 px-10 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 transition-colors duration-300">
-                    <p className="text-sm text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300">
-                        @ {Thn} Catatan dibuat dengan presisi.
+                    <p className="text-sm text-slate-600 dark:text-slate-200 font-medium transition-colors duration-300">
+                        &copy;{Thn} Catatan simpel. Hak cipta dilindungi.
                     </p>
                     <div className="flex gap-6 text-[12px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors duration-300">
                         <a
                             href="#"
-                            className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                            className="text-slate-600 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
                         >
                             Bantuan
                         </a>
                         <a
                             href="#"
-                            className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
+                            className="text-slate-600 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
                         >
                             Privasi
                         </a>

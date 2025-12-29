@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
 
+import dayjs from "dayjs";
+import "dayjs/locale/id";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+dayjs.locale("id");
+
 function NoteItem({
     title,
     category,
@@ -8,7 +15,7 @@ function NoteItem({
     setEditNote,
     onDelete
 }) {
-    const [showAction, setShowAction] = useState(false); // State lokal untuk menu popup
+    const [showAction, setShowAction] = useState(false);
 
     return (
         <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-[24px] hover:shadow-2xl hover:shadow-indigo-100 dark:hover:shadow-none transition-all duration-300 cursor-pointer">
@@ -16,7 +23,7 @@ function NoteItem({
                 className={`w-2 h-10 absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full bg-indigo-500`}
             ></div>
             <div className="flex flex-col h-full">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-3 tracking-widest">
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-500 uppercase mb-3 tracking-widest">
                     {category}
                 </span>
                 <h3
@@ -26,14 +33,14 @@ function NoteItem({
                     {title}
                 </h3>
                 <div className="mt-auto flex items-center justify-between relative">
-                    <span className="text-xs text-slate-400 dark:text-slate-500">
-                        Baru saja
+                    <span className="text-xs text-slate-600 dark:text-slate-500 first-letter:uppercase">
+                        {dayjs(note.created_at).fromNow()}
                     </span>
 
                     <div className="relative">
                         <button
                             onClick={() => setShowAction(!showAction)}
-                            className="text-slate-300 dark:text-slate-600 hover:text-indigo-600"
+                            className="text-slate-600 dark:text-slate-600 hover:text-indigo-600"
                         >
                             <i className="fas fa-ellipsis-h text-lg"></i>
                         </button>
@@ -72,16 +79,21 @@ function NoteItem({
 export default function AllNote() {
     const [notes, setNotes] = useState([]);
     const [selectedNote, setSelectedNote] = useState(null);
-    const [editNote, setEditNote] = useState(null); // State untuk modal edit
+    const [editNote, setEditNote] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     // API AMBIL DATA
     const fetchNotes = async () => {
+        setLoading(true);
+
         try {
             const response = await fetch("http://127.0.0.1:8000/api/notes");
             const data = await response.json();
             setNotes(data);
         } catch (error) {
             console.error("Gagal mengambil data:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -135,30 +147,49 @@ export default function AllNote() {
             </h1>
 
             <div className="relative max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {notes.length === 0 ? (
-                    <p className="text-2xl text-center absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-500">
-                        Tidak ada data
-                    </p>
+                {loading ? (
+                    <div className="min-h-screen flex justify-center items-center w-full">
+                        <p
+                            className="text-2xl absolute inset-0 flex
+                        items-center justify-center text-slate-900
+                        dark:text-slate-100 italic font-bold"
+                        >
+                            Loading...
+                        </p>
+                    </div>
+                ) : notes.length === 0 ? (
+                    <div className="min-h-screen flex justify-center items-center w-full">
+                        <p
+                            className="text-2xl text-center absolute inset-0 flex
+                    items-center justify-center text-slate-900
+                    dark:text-slate-100 italic font-bold"
+                        >
+                            Tidak ada data
+                        </p>
+                    </div>
                 ) : (
-                    notes.map(note => (
-                        <NoteItem
-                            key={note.id}
-                            title={note.title}
-                            category={note.category}
-                            setSelectedNote={setSelectedNote}
-                            setEditNote={setEditNote}
-                            onDelete={handleDelete}
-                            content={note.content}
-                            note={note}
-                        />
-                    ))
+                    notes
+                        .slice()
+                        .reverse()
+                        .map(note => (
+                            <NoteItem
+                                key={note.id}
+                                title={note.title}
+                                created={note.created_at}
+                                category={note.category}
+                                setSelectedNote={setSelectedNote}
+                                setEditNote={setEditNote}
+                                onDelete={handleDelete}
+                                content={note.content}
+                                note={note}
+                            />
+                        ))
                 )}
             </div>
 
             {/* MODAL DETAIL */}
             {selectedNote && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    {/* Overlay: Hanya div ini yang bisa menutup modal */}
                     <div
                         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-all"
                         onClick={() => setSelectedNote(null)}
@@ -172,7 +203,7 @@ export default function AllNote() {
                             </span>
                             <button
                                 onClick={() => setSelectedNote(null)}
-                                className="text-slate-400 hover:text-red-500 transition-colors"
+                                className="text-slate-600 hover:text-red-500 transition-colors"
                             >
                                 <i className="fas fa-times text-xl"></i>
                             </button>
@@ -181,7 +212,7 @@ export default function AllNote() {
                             {selectedNote.title}
                         </h2>
                         <div className="overflow-y-auto max-h-[60vh] pr-2">
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                            <p className="text-slate-600 dark:text-slate-600 leading-relaxed whitespace-pre-line">
                                 {selectedNote.content}
                             </p>
                         </div>
