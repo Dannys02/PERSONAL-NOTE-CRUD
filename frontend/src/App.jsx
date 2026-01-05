@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Top from "./utils/TopScroll";
 import Dashboard from "./Dashboard";
+import Help from "./pages/Help";
+import Privacy from "./pages/Privacy";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
     const [loading, setLoading] = useState(true);
     const [dark, setDark] = useState(() => {
-        return localStorage.getItem("theme") === "dark";
+        const savedTheme = localStorage.getItem("theme");
+        // Jika belum ada data di storage (user baru), default-nya TRUE (Dark)
+        // Jika sudah ada data, cek apakah datanya adalah "dark"
+        return savedTheme ? savedTheme === "dark" : true;
     });
-
 
     // DARK MODE
     useEffect(() => {
@@ -29,16 +35,27 @@ function App() {
     return (
         <>
             {loading ? (
-                <div className="fixed w-full flex items-center justify-center
-                min-h-screen bg-gray-50 dark:bg-slate-950 overflow-hidden">
-                    <div class="flex space-x-2 justify-center items-center">
-                        <div class="h-3 w-3 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                        <div class="h-3 w-3 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                        <div class="h-3 w-3 bg-indigo-600 dark:bg-indigo-400 rounded-full animate-bounce"></div>
-                    </div>
+                <div
+                    className="min-h-screen flex justify-center items-center
+                    bg-white
+                dark:bg-slate-950"
+                >
+                    <div className="custom-loader"></div>
                 </div>
             ) : (
-                <Dashboard dark={dark} setDark={setDark} />
+                <div>
+                    <Top />
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Dashboard dark={dark} setDark={setDark} />
+                            }
+                        />
+                        <Route path="/help" element={<Help />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                    </Routes>
+                </div>
             )}
         </>
     );

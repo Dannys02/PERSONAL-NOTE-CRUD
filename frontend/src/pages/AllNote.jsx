@@ -81,6 +81,7 @@ export default function AllNote() {
     const [selectedNote, setSelectedNote] = useState(null);
     const [editNote, setEditNote] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [customCategory, setCustomCategory] = useState("");
 
     // API AMBIL DATA
     const fetchNotes = async () => {
@@ -119,11 +120,20 @@ export default function AllNote() {
     // API EDIT DATA
     const handleUpdate = async e => {
         e.preventDefault();
+        
+        const dataToSend = {
+            ...editNote,
+            category:
+                editNote.category === "Larian" || editNote.category === "Lainnya"
+                    ? customCategory
+                    : editNote.category
+        };
+        
         try {
             await fetch(`http://127.0.0.1:8000/api/notes/${editNote.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(editNote)
+                body: JSON.stringify(dataToSend)
             });
             setEditNote(null);
             fetchNotes();
@@ -148,14 +158,8 @@ export default function AllNote() {
 
             <div className="relative max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {loading ? (
-                    <div className="min-h-screen flex justify-center items-center w-full">
-                        <p
-                            className="text-2xl absolute inset-0 flex
-                        items-center justify-center text-slate-900
-                        dark:text-slate-100 italic font-bold"
-                        >
-                            Loading...
-                        </p>
+                    <div className="min-h-screen flex justify-center items-center">
+                      <div class="custom-loader"></div>
                     </div>
                 ) : notes.length === 0 ? (
                     <div className="min-h-screen flex justify-center items-center w-full">
@@ -277,6 +281,25 @@ export default function AllNote() {
                                         <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
+                                {editNote.category === "Lainnya" && (
+                        <div className="flex items-start gap-3 px-4 py-2
+                        bg-white dark:bg-slate-900 rounded-2xl border
+                        border-slate-200 dark:border-slate-800 shadow-sm
+                        focus-within:border-indigo-500 transition-all
+                        duration-300">
+                            <i className="fas fa-plus-circle text-indigo-600 dark:text-indigo-400 mt-1 w-5"></i>
+                            <input
+                                type="text"
+                                placeholder="Tulis kategori Anda..."
+                                value={customCategory}
+                                onChange={e =>
+                                    setCustomCategory(e.target.value)
+                                }
+                                className="outline-none w-full bg-transparent dark:text-slate-100 placeholder-slate-400"
+                                required
+                            />
+                        </div>
+                    )}
                                 <div className="flex items-start gap-3 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm focus-within:border-indigo-500 transition-all duration-300">
                                     <i className="fas fa-pen-nib mt-1 text-indigo-600"></i>
                                     <textarea

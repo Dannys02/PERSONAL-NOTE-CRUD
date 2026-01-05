@@ -8,6 +8,8 @@ export default function CreateNote({ pages, setPages }) {
         content: ""
     });
 
+    const [customCategory, setCustomCategory] = useState("");
+
     // Fungsi untuk mengupdate state setiap kali input berubah
     const handleChange = e => {
         setForm({
@@ -19,6 +21,13 @@ export default function CreateNote({ pages, setPages }) {
     // Fungsi untuk kirim data ke Laravel
     const handleSubmit = async e => {
         e.preventDefault();
+        
+        const dataToSend = {
+        ...form,
+        category: form.category === "Larian" || form.category === "Lainnya" 
+                  ? customCategory 
+                  : form.category
+    };
 
         try {
             const response = await fetch("http://127.0.0.1:8000/api/notes", {
@@ -27,7 +36,7 @@ export default function CreateNote({ pages, setPages }) {
                     "Content-Type": "application/json",
                     Accept: "application/json" // Agar Laravel mengirim error validasi dalam JSON
                 },
-                body: JSON.stringify(form)
+                body: JSON.stringify(dataToSend)
             });
 
             const result = await response.json();
@@ -120,6 +129,27 @@ export default function CreateNote({ pages, setPages }) {
                         <i className="fas fa-chevron-down text-[10px] text-slate-400 dark:text-slate-500 group-focus-within:rotate-180 transition-transform duration-300"></i>
                     </div>
 
+                    {form.category === "Lainnya" && (
+                        <div className="flex items-center gap-3 px-4 py-3
+                        bg-white dark:bg-slate-900 rounded-2xl border
+                        border-slate-200 dark:border-slate-800 shadow-sm
+                        focus-within:border-indigo-500
+                        dark:focus-within:ring-indigo-900/20 transition-all
+                        duration-300 cursor-pointer group">
+                            <i className="fas fa-plus-circle text-indigo-600 dark:text-indigo-400 mt-1 w-5"></i>
+                            <input
+                                type="text"
+                                placeholder="Tulis kategori Anda..."
+                                value={customCategory}
+                                onChange={e =>
+                                    setCustomCategory(e.target.value)
+                                }
+                                className="outline-none w-full bg-transparent dark:text-slate-100 placeholder-slate-400"
+                                required
+                            />
+                        </div>
+                    )}
+                    
                     <div className="flex items-start gap-3 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm focus-within:border-indigo-500  dark:focus-within:ring-indigo-900/20 transition-all duration-300">
                         <i className="fas fa-pen-nib mt-1 text-indigo-600 dark:text-indigo-400 transition-colors duration-300"></i>
                         <textarea

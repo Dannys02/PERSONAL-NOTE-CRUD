@@ -3,6 +3,7 @@ import axios from "axios";
 import AllNote from "./pages/AllNote";
 import CreateNote from "./pages/CreateNote";
 import Setting from "./pages/Setting";
+import { Link } from "react-router-dom";
 
 export default function Dashboard({ dark, setDark }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -147,18 +148,18 @@ export default function Dashboard({ dark, setDark }) {
                         &copy;{Thn} Catatan simpel. Hak cipta dilindungi.
                     </p>
                     <div className="flex gap-6 text-[12px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors duration-300">
-                        <a
-                            href="#"
+                        <Link
+                            to="/help"
                             className="text-slate-600 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
                         >
                             Bantuan
-                        </a>
-                        <a
-                            href="#"
+                        </Link>
+                        <Link
+                            to="/privacy"
                             className="text-slate-600 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300"
                         >
                             Privasi
-                        </a>
+                        </Link>
                     </div>
                 </footer>
             </div>
