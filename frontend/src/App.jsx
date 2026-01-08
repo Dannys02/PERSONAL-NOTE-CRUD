@@ -1,9 +1,12 @@
+import ProtectedRoute from "./pages/ProtectedRoute";
 import { useState, useEffect } from "react";
 import "./App.css";
 import Top from "./utils/TopScroll";
 import Dashboard from "./Dashboard";
 import Help from "./pages/Help";
 import Privacy from "./pages/Privacy";
+import Login from "./pages/Login";
+import Daftar from "./pages/Daftar";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -49,11 +52,15 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                <Dashboard dark={dark} setDark={setDark} />
+                                <ProtectedRoute>
+                                    <Dashboard dark={dark} setDark={setDark} />
+                                </ProtectedRoute>
                             }
                         />
                         <Route path="/help" element={<Help />} />
                         <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Daftar />} />
                     </Routes>
                 </div>
             )}
